@@ -9,7 +9,7 @@ class AdminDAO {
         this.#conexao = new Database();
     }
  
-    async consultarAdmin() {
+    async consultarAdmins() {
  
         const lista_Admin = []
         const Admins = await this.#conexao.selectGamers()
@@ -21,6 +21,10 @@ class AdminDAO {
                 objAdmin.id= Admin.id_gamers
                 objAdmin.email=Admin.email_gamer
                 objAdmin.senha=Admin.senha_gamer
+                objAdmin.nome=Admin.nome_gamer
+                objAdmin.personagensAdmin=Admin.personagensAdmin_gamer
+                objAdmin.dtNascAdmin=Admin.dtNascAdmin_gamer
+                objAdmin.coinsAdmin=Admin.coinsAdmin_gamer
  
  
                 lista_Admin.push(objAdmin.toJson())

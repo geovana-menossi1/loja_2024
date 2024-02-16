@@ -329,6 +329,40 @@ class Database {
         }
     }
 
+        //////////////////////////////////////////////////// Skin ////////////////////////////////////////////////////
+        async selectGamers() {
+            const skinsData = await this.#connection.query("SELECT * FROM gamers;");
+            return skinsData[0];
+        }
+    
+        async selecionarAdminId(id) {
+            const skinsData = await this.#connection.query("select * from skins where id_skin =" + id)
+            return skinsData[0]
+        }
+    
+        async updateAdmin(nome, senha, email, datnasc, personagens, coins, id) {
+            const sql = `update admin 
+            set nome_gamer = "${nome}",
+                senha_gamer = "${senha}",
+                email_gamer = "${email}",
+                dtnasc_gamer = ${datnasc}   ,
+                personagens_id_personagem  = "${personagens}",
+                coins_id_coin = "${coins}",
+                id_gamers = "${id}"
+             `
+    
+            const dt = await this.#connection.execute(sql)
+            return dt[0]
+        }
+        async deleteAdmin(id){
+      
+            const sql = 'delete from gamers where id_gamers =' +id;
+         
+            const res = await this.#connection.execute(sql)
+           
+            return res[0]
+         }
+
     }
 
 

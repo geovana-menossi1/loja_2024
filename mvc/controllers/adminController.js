@@ -1,63 +1,82 @@
-// const express = require('express');
-// const path = require('path');
-// const mysql = require('mysql2');
-// const bodyParser = require('body-parser');
+const path = require('path')
+const AdminDAO = require('../../DAO/adminDAO')
+
+function verificarAutenticacao(req, res, next) {
+    if (req.session.user && req.session.user.email) {
+        next();
+    } else {
+        res.redirect('/admin');
+    }
+}
+module.exports = (app) => {   
+
+   
+    app.get("/gamer",verificarAutenticacao, (req, res) => {
+        res.setHeader("Access-Control-Allow-Origin","*")
+        
+        res.sendFile(path.resolve("mvc/views/ctrldev/admin/addadmins.html"))
+    })
+
+    app.get("/gamer/lista",verificarAutenticacao, async (req, res) => {
+        res.setHeader("Access-Control-Allow-Origin","*")
+
+        const adminDAO = new AdminDAO()
+        const lista_admins = await adminDAO.consultarAdmins()
+   
+        res.render("admin/listadmins", { admin: lista_admins })
+    })
+
+    app.get("/gamers",verificarAutenticacao, async (req, res) => {
+        
+        const adminDAO = new adminDAO();
+        res.setHeader("Access-Control-Allow-Origin","*")
+
+        res.status(201).json(await adminDAO.consultarAdmins())
+
+    })
 
 
-// const app = express();
+    app.post("/registrargamer", (req, res) => {
+        
+        const adminDAO = new AdminDAO();
+        res.setHeader("Access-Control-Allow-Origin","*")
+        const {txtnomegamer, txtsenhagamer, txtemailgamer, dtnascgamer } = req.body
 
-// // Configuração do Body Parser
-// app.use(bodyParser.urlencoded({ extended: true }));
+        adminDAO.registraradmin(txtnomegamer, txtsenhagamer, txtemailgamer, dtnascgamer)
 
-// // Configurando o diretório para servir arquivos estáticos
-//  app.use(express.static(path.resolve(__dirname, '../views/ctrldev')));
+        res.status(201).json({ 
+            msg: "ok"
+        })
 
-// module.exports = (app) => {
-// // Rota para a página inicial
-//     app.get("/admin", async (req, res) => {
-//         res.setHeader("Access-Control-Allow-Origin", "*");
+    })
+    app.delete("/gamer/apagar/:id", async (req,res) =>{
+        const adminDAO = new adminDAO();
+        res.setHeader("Access-Control-Allow-Origin","*")
+    
+        res.json(await adminDAO.apagaradmin(req.params.id))
 
-//         // Corrija o caminho do arquivo index.html
-//         res.sendFile(path.resolve(__dirname, '../views/ctrldev', 'index.html'));
-//     });
+    })
 
-  
-// // Rota para processar o formulário de login
-// app.post('/login', (req, res) => {
-//     const email = req.body.txtctrllogin;
-//     const senha = req.body.txtctrlpass;
-  
-//     // Consulta SQL para verificar o login
-//     const sql = 'SELECT * FROM gamers WHERE email_gamer = ? AND senha_gamer = ?';
-//     db.query(sql, [email, senha], (err, result) => {
-//       if (err) throw err;
-  
-//       if (result.length > 0) {
-//         // Se o login for bem-sucedido, redirecione para home.html
-//         res.redirect('/home');
-//       } else {
-//         // Se o login falhar, redirecione para error.html
-//         res.redirect('/error');
-//       }
-//     });
-//   });
+    app.get("/gamer/alterar/:id", async (req, res) => {
+        const adminDAO = new adminDAO()
 
+        const dtadmin = await adminDAO.consultarAdminId(req.params.id)
+        
 
-//    // Rota para a página home
-//    app.get("/home", async (req, res) => {
-//     res.setHeader("Access-Control-Allow-Origin", "*");
+        res.render("gamer/upadmins", { admin: dtadmin  })
+    })
 
-//     // Corrija o caminho do arquivo index.html
-//     res.sendFile(path.resolve(__dirname, '../views/ctrldev', 'home.html'));
-// });
+    app.put("/gamer/alterar", async (req, res) => {
+        const adminDAO = new adminDAO();
+        res.setHeader("Access-Control-Allow-Origin","*")
 
-  
-//   // Rota para a página de erro
-//   app.get("/error", async (req, res) => {
-//     res.setHeader("Access-Control-Allow-Origin", "*");
+        //Destructuring
+        const {nome, senha, email, dtgamer, id } = req.body
 
-//     // Corrija o caminho do arquivo index.html
-//     res.sendFile(path.resolve(__dirname, '../views/ctrldev', 'error.html'));
-// });
+        const r = await adminDAO.atualizarAdmin(id, nome, senha, email, dtgamer)
 
-// };
+        res.json({r})
+        
+
+    })
+}
