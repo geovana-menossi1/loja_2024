@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atualizar Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body>
+    <main>
+        <h2>Atualizar admin</h2>
+        <section id="altercupons">
+            <form id="form-admin">
+                <!-- Iniciando primeira -->
+                <div class="row">
+                    <input value="<%= admin.id %>" aria-hidden="true" type="hidden" id="txtid" name="txtid">
+                    <div class="col">
+                        <label for="txtnomegamer" class="form-label">Nome do admin</label>
+                        <input value="<%= admin.nome %>" type="text" class="form-control" name="txtnomegamer"
+                            id="txtnomegamer" tabindex="1" autofocus>
+                    </div>
+                    <div class="col">
+                        <label for="txtsenhagamer" class="form-label">Senha do admin</label>
+                        <input value="<%= admin.senha %>" type="password" class="form-control" name="txtsenhagamer"
+                            id="txtsenhagamer" tabindex="2">
+                    </div>
+                </div>
+                <!-- Iniciando segunda linha -->
+                <div class="row">
+                    <input value="<%= admin.id %>" aria-hidden="true" type="hidden" id="txtid" name="txtid">
+                    <div class="col">
+                        <label for="txtemailgamer" class="form-label">Email do admin</label>
+                        <input value="<%= admin.email %>" type="email" class="form-control" name="txtemailgamer"
+                            id="txtemailgamer" tabindex="1" autofocus>
+                    </div>
+                    <div class="col">
+                        <label for="dtnascgamer" class="form-label">Data de Nascismento do admin</label>
+                        <% let startDateFormatted = admin.dtgamer ? new Date(cupom.validade).toISOString().split('T')[0] : ''; %>
+                        <input value="<%= startDateFormatted %>" type="date" class="form-control" name="dtnascgamer"
+                            id="dtnascgamer" tabindex="3">
+                    </div>
+                </div>
+                <!-- Iniciando terceira linha -->
+                <div class="row">
+                    <div class="col">
+                        <label for="selpersonagens" class="form-label">Personagem</label>
+                        <select name="selpersonagens" id="selpersonagens" class="form-control" tabindex="2">
+                                <option id="option" value=""></option>
+                                <option id="option" value="1">1</option>
+                                <option id="option" value="2">2</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label for="selcoins" class="form-label">Coin</label>
+                        <select name="selcoins" id="selcoins" class="form-control" tabindex="2">
+                                <option id="option" value=""></option>
+                                <option id="option" value="1">1</option>
+                        </select>
+                       </div>
+                </div>
+                    <a href="/gamer/lista" onclick="atualizar();">
+                        <input type="button" class="btn btn-warning mt-4" value="Cadastrar" name="btcadcupons"
+                            id="btcadcupons" tabindex="5">
+                    </a>
+            </form>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById("form-admin").addEventListener("submit", (e) => {
+            e.preventDefault();
+            atualizar();
+        })
+
+        async function atualizar() {
+
+            const admin = {
+                "id": document.getElementById("txtid").value,
+                "nome": document.getElementById("txtnomegamer").value,
+                "senha": document.getElementById("txtsenhagamer").value,
+                "email": document.getElementById("txtemailgamer").value,
+                "dtgamer": document.getElementById("dtnascgamer").value,
+                "personagens": document.getElementById("selpersonagens").value,
+                "coins": document.getElementById("selcoins").value
+            }
+
+            const resposta = await fetch(`/admin/alterar`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(admin)
+            })
+            const json = await resposta.json()
+            const status = await json
+
+            console.log(admin)
+
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
