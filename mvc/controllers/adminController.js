@@ -28,6 +28,22 @@ module.exports = (app) => {
     app.get("/gamers",verificarAutenticacao, async (req, res) => {
         
         const adminDAO = new AdminDAO();
+        
+        res.sendFile(path.resolve("mvc/views/ctrldev/admin/addadmins.html"))
+    })
+
+    app.get("/gamer/lista",verificarAutenticacao, async (req, res) => {
+        res.setHeader("Access-Control-Allow-Origin","*")
+
+        const adminDAO = new AdminDAO()
+        const lista_admins = await adminDAO.consultarAdmins()
+   
+        res.render("admin/listadmins", { admin: lista_admins })
+    })
+
+    app.get("/gamers",verificarAutenticacao, async (req, res) => {
+        
+        const adminDAO = new adminDAO();
         res.setHeader("Access-Control-Allow-Origin","*")
 
         res.status(201).json(await adminDAO.consultarAdmins())
@@ -71,6 +87,5 @@ module.exports = (app) => {
         const r = await adminDAO.atualizarAdmin(id, nome, senha, email, dtgamer, personagens, coins)
 
         res.json({r})
-
     })
 }

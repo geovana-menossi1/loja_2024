@@ -161,7 +161,7 @@ class Database {
     {
    const retorno = await this.#connection.execute(`
      insert into promocoes (nome_promocao,dt_start_promocao, dt_end_promocao,
-       descr_promocao, ativa_promocao, descontos_id_desconto ) 
+       descr_promocao, ativa_promocao,descontos_id_desconto ) 
          values ('${nome}','${dtstart}','${dtend}','${descricao}',
         ' ${ativa}',' ${desconto}')
      `)
@@ -329,31 +329,26 @@ class Database {
         }
     }
 
-        //////////////////////////////////////////////////// Admin ////////////////////////////////////////////////////
+        //////////////////////////////////////////////////// Skin ////////////////////////////////////////////////////
         async selectGamers() {
             const skinsData = await this.#connection.query("SELECT * FROM gamers;");
             return skinsData[0];
         }
     
         async selecionarAdminId(id) {
-            const skinsData = await this.#connection.query("select * from gamers where id_gamers =" + id)
+            const skinsData = await this.#connection.query("select * from skins where id_skin =" + id)
             return skinsData[0]
         }
-        async insertadmin(nome, senha, email, dtnasc, personagens, coins, id){
-            const retorno = await this.#connection.execute(`
-             INSERT INTO gamers VALUES ('null', '${nome}', '${senha}', '${email}', ${dtnasc}, '${personagens}', '${coins}');
-           `)
-        }
     
-        async updateAdmin(nome, senha, email, dtnasc, personagens, coins, id) {
+        async updateAdmin(nome, senha, email, datnasc, personagens, coins, id) {
             const sql = `update admin 
             set nome_gamer = "${nome}",
                 senha_gamer = "${senha}",
                 email_gamer = "${email}",
-                dtnasc_gamer = ${dtnasc}   ,
+                dtnasc_gamer = ${datnasc}   ,
                 personagens_id_personagem  = "${personagens}",
-                coins_id_coin = "${coins}"
-                id_gamers = ${id}
+                coins_id_coin = "${coins}",
+                id_gamers = "${id}"
              `
     
             const dt = await this.#connection.execute(sql)
@@ -361,7 +356,7 @@ class Database {
         }
         async deleteAdmin(id){
       
-            const sql = `delete from gamers where id_gamers = ${id}`
+            const sql = 'delete from gamers where id_gamers =' +id;
          
             const res = await this.#connection.execute(sql)
            
