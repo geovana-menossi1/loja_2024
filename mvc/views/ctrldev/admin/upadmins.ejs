@@ -12,7 +12,7 @@
 <body>
     <main>
         <h2>Atualizar admin</h2>
-        <section id="altercupons">
+        <section id="alteradmin">
             <form id="form-admin">
                 <!-- Iniciando primeira -->
                 <div class="row">
@@ -37,8 +37,8 @@
                             id="txtemailgamer" tabindex="1" autofocus>
                     </div>
                     <div class="col">
-                        <label for="dtnascgamer" class="form-label">Data de Nascismento do admin</label>
-                        <% let startDateFormatted = admin.dtgamer ? new Date(cupom.validade).toISOString().split('T')[0] : ''; %>
+                        <label for="dtnascgamer" class="form-label">Data de Nascimento do admin</label>
+                        <% let startDateFormatted = admin.dtgamer ? new Date(admin.dtgamer).toISOString().split('T')[0] : ''; %>
                         <input value="<%= startDateFormatted %>" type="date" class="form-control" name="dtnascgamer"
                             id="dtnascgamer" tabindex="3">
                     </div>

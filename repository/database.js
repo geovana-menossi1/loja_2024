@@ -336,19 +336,26 @@ class Database {
         }
     
         async selecionarAdminId(id) {
-            const skinsData = await this.#connection.query("select * from skins where id_skin =" + id)
+            const skinsData = await this.#connection.query("select * from gamers where id_gamers =" + id)
             return skinsData[0]
         }
+        async insertadmin(nome, senha, email, dtnasc, personagens, coins){
+            const retorno = await this.#connection.execute(`
+             INSERT INTO gamers (nome_gamer, senha_gamer, email_gamer, dtnasc_gamer, personagens_id_personagem, coins_id_coin) VALUES
+             ('${nome}', '${senha}', '${email}', '${dtnasc}', '${personagens}', '${coins}');
+           `)
+         }
     
         async updateAdmin(nome, senha, email, datnasc, personagens, coins, id) {
-            const sql = `update admin 
+            const sql = `update gamers 
             set nome_gamer = "${nome}",
                 senha_gamer = "${senha}",
                 email_gamer = "${email}",
-                dtnasc_gamer = ${datnasc}   ,
+                dtnasc_gamer = "${datnasc}",
                 personagens_id_personagem  = "${personagens}",
-                coins_id_coin = "${coins}",
-                id_gamers = "${id}"
+                coins_id_coin = "${coins}"
+                where id_gamers = ${id}
+                
              `
     
             const dt = await this.#connection.execute(sql)

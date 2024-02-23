@@ -20,9 +20,9 @@ module.exports = (app) => {
         res.setHeader("Access-Control-Allow-Origin", "*");
     
         const adminDAO = new AdminDAO();
-        const lista_admins = await adminDAO.consultarAdmins();
+        const lista_Admin = await adminDAO.consultarAdmins();
     
-        res.render("admin/listadmins", { Admins: lista_admins }); 
+        res.render("admin/listadmins", { admin: lista_Admin }); 
     });
 
     app.get("/gamers",verificarAutenticacao, async (req, res) => {
@@ -36,14 +36,14 @@ module.exports = (app) => {
         res.setHeader("Access-Control-Allow-Origin","*")
 
         const adminDAO = new AdminDAO()
-        const lista_admins = await adminDAO.consultarAdmins()
+        const lista_Admin = await adminDAO.consultarAdmins()
    
-        res.render("admin/listadmins", { admin: lista_admins })
+        res.render("admin/listadmins", { admin: lista_Admin })
     })
 
     app.get("/gamers",verificarAutenticacao, async (req, res) => {
         
-        const adminDAO = new adminDAO();
+        const adminDAO = new AdminDAO();
         res.setHeader("Access-Control-Allow-Origin","*")
 
         res.status(201).json(await adminDAO.consultarAdmins())
@@ -59,9 +59,7 @@ module.exports = (app) => {
 
         adminDAO.registraradmin(txtnomegamer, txtsenhagamer, txtemailgamer, dtnascgamer, selpersonagens, selcoins)
 
-        res.status(201).json({ 
-            msg: "ok"
-        })
+        window.location.href = ('addamins.html')
 
     })
     app.delete("/admin/apagar/:id", async (req,res) =>{

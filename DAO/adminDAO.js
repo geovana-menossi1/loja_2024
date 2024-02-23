@@ -12,19 +12,19 @@ class AdminDAO {
     async consultarAdmins() {
  
         const lista_Admin = []
-        const Admins = await this.#conexao.selectGamers()
+        const admins = await this.#conexao.selectGamers()
  
-        if (Admins) {
-            for (const admin of Admins) {
+        if (admins) {
+            for (const admin of admins) {
                 const objAdmin = new Admin()
  
                 objAdmin.id = admin.id_gamers
                 objAdmin.nome = admin.nome_gamer
                 objAdmin.senha = admin.senha_gamer
                 objAdmin.email = admin.email_gamer
-                objAdmin.dtNascAdmin = admin.dtnasc_gamer
+                objAdmin.dtnasc = admin.dtnasc
                 objAdmin.personagens_Admin = admin.personagens_id_personagem
-                objAdmin.coinsAdmin = admin.coins_id_coin
+                objAdmin.coins = admin.coins_id_coin
  
  
                 lista_Admin.push(objAdmin.toJson())
@@ -34,18 +34,18 @@ class AdminDAO {
         return lista_Admin
     }
 
-    registraradmin(nome, senha, email, dtNascAdmin, personagens, coinsAdmin  ){
+    registraradmin(nome, senha, email, dtnasc, personagens, coins  ){
 
         const admin = new Admin()
         
         admin.nome = nome
         admin.senha = senha
         admin.email = email
-        admin.dtNascAdmin = dtNascAdmin
+        admin.dtnasc = dtnasc
         admin.personagens = personagens
-        admin.coinsAdmin = coinsAdmin
+        admin.coins = coins
 
-        this.#conexao.insertadmin(admin.nome, admin.senha, admin.email, admin.dtNascAdmin, admin.personagens, admin.coinsAdmin)
+        this.#conexao.insertadmin(admin.nome, admin.senha, admin.email, admin.dtnasc, admin.personagens, admin.coins)
     }
  
    
@@ -55,31 +55,31 @@ class AdminDAO {
              
         const objAdmin = new Admin()
  
-        objAdmin.id = admin[0].	id_gamers
-        objAdmin.nomeAdmin = admin[0].nome_gamer
-        objAdmin.senhaAdmin = admin[0].senha_gamer
-        objAdmin.emailAdmin = admin[0].email_gamer
-        objAdmin.dtNascAdmin = admin[0].dtnasc_gamer
+        objAdmin.id = admin[0].id_gamers
+        objAdmin.nome = admin[0].nome_gamer
+        objAdmin.senha = admin[0].senha_gamer
+        objAdmin.email = admin[0].email_gamer
+        objAdmin.dtnasc = admin[0].dtnasc_gamer
         objAdmin.personagens = admin[0].personagens_id_personagem
-        objAdmin.coinsAdmin = admin[0].coins_id_coin
+        objAdmin.coins = admin[0].coins_id_coin
      
  
         return objAdmin.toJson()
     }
  
-    async atualizarAdmin(id, nome, senha, email, dtgamer, personagens, coins){
+    async atualizarAdmin(id, nome, senha, email, dtnasc, personagens, coins){
  
         const admin = new Admin()
  
         admin.id = id
-        admin.nomeAdmin = nome
-        admin.senhaAdmin = senha
-        admin.emailAdmin = email
-        admin.dtNascAdmin = dtgamer
+        admin.nome = nome
+        admin.senha = senha
+        admin.email = email
+        admin.dtnasc = dtnasc
         admin.personagens = personagens
-        admin.coinsAdmin = coins
+        admin.coins = coins
  
-        const dt = await this.#conexao.updateAdmin(admin.id, admin.nomeAdmin, admin.senhaAdmin, admin.emailAdmin, admin.dtNascAdmin, admin.personagens, admin.coinsAdmin)
+        const dt = await this.#conexao.updateAdmin(admin.nome, admin.senha, admin.email, admin.dtnasc, admin.personagens, admin.coins, admin.id)
         return dt
     }
     async apagarAdmin(id){

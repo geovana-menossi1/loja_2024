@@ -62,11 +62,11 @@ class Admin{
 
     toJson(){
         return {
-            "id": this.#id,
+            "id":this.#id,
             "email":this.#email,
             "senha":this.#senha,
             "nome":this.#nome,
-            "dtgamer": this.#dtgamer,
+            "dtgamer":this.#dtgamer,
             "personagens":this.#personagens,
             "coins":this.#coins
         }
