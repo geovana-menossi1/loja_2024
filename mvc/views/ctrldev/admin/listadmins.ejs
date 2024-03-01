@@ -37,19 +37,32 @@
                     <div class="col border-end d-flex justify-content-center align-self-center"><h6>Senha</h6></div>
                     <div class="col border-end d-flex justify-content-center align-self-center"><h6>Email</h6></div>
                     <div class="col border-end d-flex justify-content-center align-self-center"><h6>Data de Nascimento</h6></div>
+                    <div class="col border-end d-flex justify-content-center align-self-center"><h6>Nome Personagem</h6></div>
+                    <div class="col border-end d-flex justify-content-center align-self-center"><h6>Nome Coin</h6></div>
                     <div class="col border-end d-flex justify-content-center align-self-center"><h6>Atualizar</h6></div>
                     <div class="col d-flex justify-content-center align-self-center"><h6>Deletar</h6></div>
 
             </div>
-            <% for(let admin of Admins){  %>
+            <% for(let admins of admin){  %>
                 <!-- Inicio do loop de dados -->
                 <div class="row border border-1 border-warning rounded m-2 p-1 d-flex ">
-                    <div class="col border-end d-flex justify-content-center align-self-center"><%= admin.nome %> </div>
-                    <div class="col border-end d-flex justify-content-center align-self-center"><%= admin.senha %></div>
-                    <div class="col border-end d-flex justify-content-center align-self-center"><%= admin.email %></div>
-                    <div class="col border-end d-flex justify-content-center align-self-center"><%= admin.dtgamer %></div>
-                    <div class="col border-end d-flex justify-content-center align-self-center"><button onclick="atualizar('<%= admin.id %>')" class="btn bg-success"><i class="bi bi-pen"></i>  Update</button></div>
-                    <div class="col d-flex justify-content-center align-self-center"><button onclick="apagar('<%= admin.id %>')" class="btn bg-danger"> <i class="bi bi-trash3"></i> Delete</button></div>
+                    <div class="col border-end d-flex justify-content-center align-self-center"><%= admins.nome %> </div>
+                    <div class="col border-end d-flex justify-content-center align-self-center"><%= admins.senha %></div>
+                    <div class="col border-end d-flex justify-content-center align-self-center"><%= admins.email %></div>
+                    <div class="col border-end d-flex justify-content-center align-self-center">
+                        <% if (admins.dtnasc_gamer) {  %>
+                            <% let data = new Date(admins.dtnasc_gamer)  %>
+                            <% let dataFormatada = (   data.getFullYear() + "-" + (    (data.getMonth() + 1)  ) + "-" + (data.getDate())   ) %>
+                            <%= dataFormatada %>
+                        <% } else { %>
+                            Data Indisponível
+                        <% } %>
+                    </div>
+                    <div class="col border-end d-flex justify-content-center align-self-center"><%= admins.nome_personagem%></div>
+                    <div class="col border-end d-flex justify-content-center align-self-center"><%= admins.nome_coin%></div>
+                    
+                    <div class="col border-end d-flex justify-content-center align-self-center"><button onclick="atualizar('<%= admins.id %>')" class="btn bg-success"><i class="bi bi-pen"></i>  Update</button></div>
+                    <div class="col d-flex justify-content-center align-self-center"><button onclick="apagar('<%= admins.id %>')" class="btn bg-danger"> <i class="bi bi-trash3"></i> Delete</button></div>
                 </div>
             <% } %>
            

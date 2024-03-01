@@ -49,7 +49,6 @@
  </div>
 
 
-
     </main>
     
     
@@ -61,29 +60,47 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form>
+            <form action="/registrargamer2" method="post">
               <div class="mb-3">
                 <label for="recipient-name" class="col-form-label">Nome</label>
-                <input type="text" class="form-control" id="recipient-name">
+                <input type="text" class="form-control" id="txtnomegamer" placeholder="nome" name="txtnomegamer">
               </div>
               <div class="mb-3">
-                <label for="message-text" class="col-form-label">email:</label>
-                <textarea class="form-control" id="message-text"></textarea>
+                <label for="message-text" class="col-form-label">E-mail:</label>
+                <input type="text" class="form-control" id="txtemailgamer" placeholder="e-mail" name="txtemailgamer">
               </div>
               <div class="mb-3">
-                <label for="message-text" class="col-form-label">senha:</label>
-                <textarea class="form-control" id="message-text"></textarea>
+                <label for="message-text" class="col-form-label">Senha:</label>
+                <input type="password" class="form-control" id="txtsenhagamer" placeholder="Password" name="txtsenhagamer">
+              </div>
+             
+              <div class="mb-3">
+                <label for="message-text" class="col-form-label">Data de nascimento</label>
+                <input type="date" class="form-control" id="txtdatagamer" name="txtdatagamer">
               </div>
               <div class="mb-3">
-                <label for="message-text" class="col-form-label">Repetir Senha:</label>
-                <textarea class="form-control" id="message-text"></textarea>
+                <label for="message-text" class="col-form-label">Personagem</label>
+                
+                <select name="txtpersongamer" id="txtpersongamer" class="form-control" tabindex="5">
+                  <option value="1">1</option>
+                  <!-- <% for(let gamer of gamers){ %>
+
+                      <option id="option" value="<%= gamer.id %>"><%= gamer.personagem %></option>
+
+                   <% } %> -->
+              </select>
               </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            <button type="button" class="btn btn-primary">Cadastrar</button>
-          </div>
+              <div class="mb-3">
+                <label for="message-text" class="col-form-label">Moedas</label>
+                <input type="number" class="form-control" id="txtcoingamer" name="txtcoingamer">
+              </div>
+            
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button type="submit" class="btn btn-primary">Cadastrar</button>
+              </div>
+        </form>
         </div>
       </div>
     </div>

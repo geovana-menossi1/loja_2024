@@ -1,5 +1,7 @@
 const path = require('path')
 const AdminDAO = require('../../DAO/adminDAO')
+const CoinDAO = require('../../DAO/coinDAO')
+const PersonagemDAO = require('../../DAO/personagemDAO')
 
 function verificarAutenticacao(req, res, next) {
     if (req.session.user && req.session.user.email) {
@@ -11,19 +13,36 @@ function verificarAutenticacao(req, res, next) {
 module.exports = (app) => {   
 
    
-    app.get("/gamer",verificarAutenticacao, (req, res) => {
+    app.get("/gamer",async (req, res) => {
         res.setHeader("Access-Control-Allow-Origin","*")
+        const personagem = new PersonagemDAO()
+        
+        let lista_personagens = await personagem.consultarPersonagem()
+       
 
-        res.render('admin/addadmins')
+        const coin = new CoinDAO()
+        
+        let lista_coins = await coin.consultarCoin()
+       
+
+        res.render('admin/addadmins', { personagens: lista_personagens, coins: lista_coins})
     })
-    app.get("/gamer/lista", verificarAutenticacao, async (req, res) => {
-        res.setHeader("Access-Control-Allow-Origin", "*");
-    
-        const adminDAO = new AdminDAO();
-        const lista_admins = await adminDAO.consultarAdmins();
-    
-        res.render("admin/listadmins", { Admins: lista_admins }); 
-    });
+
+    app.get("/gamer/lista",verificarAutenticacao, async (req, res) => {
+        res.setHeader("Access-Control-Allow-Origin","*")
+        const personagem = new PersonagemDAO()
+        
+        let lista_personagens = await personagem.consultarPersonagem()
+       
+
+        const coin = new CoinDAO()
+        
+        let lista_coins = await coin.consultarCoin()
+
+        const adminDAO = new AdminDAO()
+        const lista_Admin = await adminDAO.consultarAdmins()
+        res.render("admin/listadmins", {admin: lista_Admin, personagens: lista_personagens, coins: lista_coins})
+    })
 
     app.get("/gamers",verificarAutenticacao, async (req, res) => {
         
@@ -39,13 +58,13 @@ module.exports = (app) => {
         
         const adminDAO = new AdminDAO();
         res.setHeader("Access-Control-Allow-Origin","*")
-        const {txtnomegamer, txtsenhagamer, txtemailgamer, dtnascgamer, selpersonagens, selcoins } = req.body
+        const {txtnomegamer, txtsenhagamer, txtemailgamer, dtnasc_gamer, selpersonagens, selcoins } = req.body
 
-        adminDAO.registraradmin(txtnomegamer, txtsenhagamer, txtemailgamer, dtnascgamer, selpersonagens, selcoins)
-
+        adminDAO.registraradmin(txtnomegamer, txtsenhagamer, txtemailgamer, dtnasc_gamer, selpersonagens, selcoins)
         res.status(201).json({ 
             msg: "ok"
         })
+
 
     })
     app.delete("/admin/apagar/:id", async (req,res) =>{
@@ -56,9 +75,17 @@ module.exports = (app) => {
     })
 
     app.get("/admin/alterar/:id", async (req, res) => {
+        const personagem = new PersonagemDAO()
+        
+        let lista_personagens = await personagem.consultarPersonagem()
+       
+
+        const coin = new CoinDAO()
+        
+        let lista_coins = await coin.consultarCoin()
         const adminDAO = new AdminDAO()
         const dtadmin = await adminDAO.consultarAdminId(req.params.id)
-        res.render("admin/upadmins", { admin: dtadmin  })
+        res.render("admin/upadmins", { admin: dtadmin, personagens: lista_personagens, coins: lista_coins})
     })
 
     app.put("/admin/alterar", async (req, res) => {
@@ -66,11 +93,10 @@ module.exports = (app) => {
         res.setHeader("Access-Control-Allow-Origin","*")
 
         //Destructuring
-        const {nome, senha, email, dtgamer, personagens, coins, id} = req.body
+        const {nome, senha, email, dtnasc_gamer, personagens, coins, id} = req.body
 
-        const r = await adminDAO.atualizarAdmin(id, nome, senha, email, dtgamer, personagens, coins)
+        const r = await adminDAO.atualizarAdmin(id, nome, senha, email, dtnasc_gamer, personagens, coins)
 
         res.json({r})
-
     })
 }

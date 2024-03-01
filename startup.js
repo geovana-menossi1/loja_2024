@@ -1,3 +1,4 @@
+
 /**
  * O express é um pacotinho com funções prontas criadas
  * por pessoas do bem, para tornar a construção de 
@@ -12,6 +13,8 @@ const express = require("express");
 const banco = require('./repository/database');
 const session = require("express-session");
 const crypto = require("crypto");
+const GamerDAO =  require("./DAO/gamerDAO")
+const PersonagemDAO = require("./DAO/personagemDAO")
 
 
 /**
@@ -65,7 +68,9 @@ app.use(express.static(path.resolve(__dirname, "./mvc/views/ctrldev")));
 // Rota para a página inicial
 app.get("/admin", async (req, res) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
-    res.sendFile(path.resolve(__dirname, "./mvc/views/ctrldev", "index.html"));
+    const gamer = new GamerDAO()
+    let lista_gamer = await gamer.consultarGamers()
+    res.render('index', {gamers: lista_gamer})
 });
 
 // Rota para processar o formulário de login
@@ -96,9 +101,8 @@ app.get("/logout", (req, res) => {
     req.session.destroy((err) => {
         if (err) {
             console.error('Erro ao destruir a sessão:', err);
-            res.redirect('/error');
         } else {
-            // Redirecione o usuário para a página de login após o logout
+            // Redirecione para a página de login após destruir a sessão
             res.redirect('/admin');
         }
     });
@@ -153,6 +157,39 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Configurando o diretório para servir arquivos estáticos
  app.use(express.static(path.resolve(__dirname, '../views/ctrldev')));
+
+ app.post("/registrargamer2", async (req, res) => {
+    const gamerDAO = new GamerDAO();
+    const personagem = new PersonagemDAO()
+    let lista_personagens = await personagem.consultarPersonagem()
+    const coin = new CoinDAO()
+    let lista_coins = await coin.consultarCoin()
+
+    res.render('admin/addadmins', { personagens: lista_personagens, coins: lista_coins})
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    const { txtnomegamer, txtemailgamer, txtsenhagamer, txtdatagamer, txtcoingamer, txtpersongamer } = req.body;
+    console.log('txtnomegamer:', txtnomegamer);
+    console.log('txtemailgamer:', txtemailgamer);
+
+    try {
+        const retorno = await gamerDAO.registrarGamer(txtnomegamer, txtemailgamer, txtsenhagamer, txtdatagamer, txtcoingamer, txtpersongamer)
+        // if (retorno) {
+        //     print
+            // Se o registro for bem-sucedido, armazene o e-mail na sessão
+            req.session.email = txtemailgamer;
+            res.redirect('/home');
+            console.log('Certo')
+        // } else {
+        //     // Se o registro falhar, redirecione para error.html
+        //     console.log("ELSE");
+        //     res.redirect('/error');
+        // }
+    } catch (error) {
+        console.error('Erro ao registrar o gamer:', error);
+        console.log("CATH");
+        res.redirect('/error');
+    }
+});
 
  
 module.exports = app

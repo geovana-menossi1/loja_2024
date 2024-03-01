@@ -161,7 +161,7 @@ class Database {
     {
    const retorno = await this.#connection.execute(`
      insert into promocoes (nome_promocao,dt_start_promocao, dt_end_promocao,
-       descr_promocao, ativa_promocao, descontos_id_desconto ) 
+       descr_promocao, ativa_promocao,descontos_id_desconto ) 
          values ('${nome}','${dtstart}','${dtend}','${descricao}',
         ' ${ativa}',' ${desconto}')
      `)
@@ -300,60 +300,57 @@ class Database {
        
         return res[0]
      }
-     async updateAtrativo(nome, lat, long ,image , desc, id){
-        const sql = `update atrativos
-        set nome_atrativo  = "${nome}",
-            lat_atrativo   = "${lat}",
-            long_atrativo  = "${long}",
-            image_atrativo = "${image}",
-            desc_atrativo  = "${desc}"
-            where
-            id_atrativo    = "${id}"
-            
-        `
-        const r = await this.#connection.execute(sql)
-        return r[0]
-     }
-     async verificarLogin(email, senha) {
-        try {
-            // Consulta SQL para verificar o login
-            const sql = 'SELECT * FROM gamers WHERE email_gamer = ? AND senha_gamer = ?';
-            const [rows, fields] = await this.#connection.execute(sql, [email, senha]);
-            
-            // Retorna o resultado da consulta
-            return rows;
-        } catch (error) {
-            // Trate os erros aqui
-            console.error('Erro ao verificar login:', error);
-            throw error; // Você pode tratar de forma mais apropriada de acordo com o seu contexto
-        }
-    }
 
-        //////////////////////////////////////////////////// Admin ////////////////////////////////////////////////////
+        //////////////////////////////////////////////////// Gamer ////////////////////////////////////////////////////
+        async adicionarLogin(nome, email, senha, datanasc, coin, personagem) {
+        
+     
+            const query = await this.#connection.execute(`insert into gamers values (null, '${nome}',  '${senha}',  '${email} ', '${datanasc}'  ,'${personagem}','${coin} ')`) 
+            return query[0]
+         }
+         async verificarLogin(email, senha) {
+            try {
+                // Consulta SQL para verificar o login
+                const sql = 'SELECT * FROM gamers WHERE email_gamer = ? AND senha_gamer = ?';
+                const [rows, fields] = await this.#connection.execute(sql, [email, senha]);
+                
+                // Retorna o resultado da consulta
+                return rows;
+            } catch (error) {
+                // Trate os erros aqui
+                console.error('Erro ao verificar login:', error);
+                throw error; // Você pode tratar de forma mais apropriada de acordo com o seu contexto
+            }
+        }
+        async selecionarGamers(){
+            const gamersData = await this.#connection.query("select * from gamers")
+            return gamersData[0]
+         } 
         async selectGamers() {
-            const skinsData = await this.#connection.query("SELECT * FROM gamers;");
+            const skinsData = await this.#connection.query("SELECT * from gamers INNER JOIN personagens ON gamers.personagens_id_personagem = personagens.id_personagem JOIN coins ON gamers.coins_id_coin = coins.id_coin");
             return skinsData[0];
         }
     
         async selecionarAdminId(id) {
-            const skinsData = await this.#connection.query("select * from gamers where id_gamers =" + id)
+            const skinsData = await this.#connection.query("SELECT * from gamers INNER JOIN personagens ON gamers.personagens_id_personagem = personagens.id_personagem JOIN coins ON gamers.coins_id_coin = coins.id_coin where id_gamers =" + id)
             return skinsData[0]
         }
-        async insertadmin(nome, senha, email, dtnasc, personagens, coins, id){
+        async insertadmin(nome, senha, email, dtnasc_gamer, personagens_id_personagem, coins){
             const retorno = await this.#connection.execute(`
-             INSERT INTO gamers VALUES ('null', '${nome}', '${senha}', '${email}', ${dtnasc}, '${personagens}', '${coins}');
+             INSERT INTO gamers (nome_gamer, senha_gamer, email_gamer, dtnasc_gamer, personagens_id_personagem, coins_id_coin) VALUES
+             ('${nome}', '${senha}', '${email}', '${dtnasc_gamer}', '${personagens_id_personagem}', '${coins}');
            `)
-        }
-    
-        async updateAdmin(nome, senha, email, dtnasc, personagens, coins, id) {
-            const sql = `update admin 
+         }
+         async updateAdmin(nome, senha, email, dtnasc_gamer, personagens, coins, id) {
+            const sql = `update gamers 
             set nome_gamer = "${nome}",
                 senha_gamer = "${senha}",
                 email_gamer = "${email}",
-                dtnasc_gamer = ${dtnasc}   ,
+                dtnasc_gamer = "${dtnasc_gamer}",
                 personagens_id_personagem  = "${personagens}",
                 coins_id_coin = "${coins}"
-                id_gamers = ${id}
+                where id_gamers = ${id}
+                
              `
     
             const dt = await this.#connection.execute(sql)
@@ -361,12 +358,85 @@ class Database {
         }
         async deleteAdmin(id){
       
-            const sql = `delete from gamers where id_gamers = ${id}`
+            const sql = 'delete from gamers where id_gamers =' +id;
          
             const res = await this.#connection.execute(sql)
            
             return res[0]
          }
+         async verificarLogin(email, senha) {
+            try {
+                // Consulta SQL para verificar o login
+                const sql = 'SELECT * FROM gamers WHERE email_gamer = ? AND senha_gamer = ?';
+                const [rows, fields] = await this.#connection.execute(sql, [email, senha]);
+                
+                // Retorna o resultado da consulta
+                return rows;
+            } catch (error) {
+                // Trate os erros aqui
+                console.error('Erro ao verificar login:', error);
+                throw error; // Você pode tratar de forma mais apropriada de acordo com o seu contexto
+            }
+        }
+
+        //////////////////////////////////////////////////// Personagem ////////////////////////////////////////////////////
+        async selecionarPersonagem() {
+            const personagensData = await this.#connection.query("SELECT * FROM personagens;");
+            return personagensData[0];
+        }
+    
+        async insertPersonagens( nome, genero, tipo,totalcoin,latitude,longitude,skins) {
+            const sql = `
+                INSERT INTO personagens (nome_personagem,genero_personagem,tipo_personagem,totalcoin_personagem,start_latitude_personagem,start_longitude_personagem,skins_id_skin  )
+                VALUES ('${nome}','${genero}','${tipo}','${totalcoin}','${latitude}','${longitude}','${skins}');
+            `
+            const bd = await this.#connection.execute(sql);
+            return bd[0];
+        }
+    
+        async selecionarPersonagensId(id) {
+            const personagensData = await this.#connection.query("select * from personagens where id_personagem =" + id)
+            return personagensData[0]
+        }
+    
+        async deletePersonagens(id) {
+            const sql =
+                `
+            delete from personagens
+            where id_personagem = ${id}`
+    
+            const dt = await this.#connection.execute(sql)
+            return dt[0]
+        }
+        //////////////////////////////////////////////////// Coins ////////////////////////////////////////////////////
+        async selecionarCoins() {
+            const coinsData = await this.#connection.query("SELECT * FROM coins;");
+            return coinsData[0];
+        }
+    
+        async insertCoins( nome, valor, imagem) {
+            const sql = `
+                INSERT INTO coins (nome_coin,value_coin,image_coin)
+                VALUES ('${nome}','${valor}','${imagem}');
+            `
+            const bd = await this.#connection.execute(sql);
+            return bd[0];
+        }
+    
+        async selecionarCoinsId(id) {
+            const coinsData = await this.#connection.query("select * from coins where id_coin =" + id)
+            return coinsData[0]
+        }
+    
+        async deleteCoins(id) {
+            const sql =
+                `
+            delete from coins
+            where id_coin = ${id}`
+    
+            const dt = await this.#connection.execute(sql)
+            return dt[0]
+        }
 
     }
 
